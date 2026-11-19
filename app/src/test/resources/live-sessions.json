@@ -1,0 +1,16 @@
+{
+  "sessions": [
+    {
+      "id": "demo-session",
+      "task_id": "demo-task",
+      "state": "RUNNING",
+      "workspace_path": "/srv/projects/example",
+      "metadata": {
+        "acp_model_state": {
+          "current_model_id": "example-model"
+        }
+      }
+    }
+  ],
+  "total": 1
+}

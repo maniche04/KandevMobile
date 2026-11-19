@@ -1,0 +1,18 @@
+[Unit]
+Description=Forge authenticated remote origin gateway
+After=network-online.target kandev.service
+Wants=network-online.target
+
+[Service]
+ExecStart=/usr/bin/node %h/projects/KandevMobile/remote/gateway.mjs
+Environment=FORGE_REMOTE_STATE=%h/.forge/remote/devices.json
+EnvironmentFile=-%h/.forge/remote.env
+Restart=always
+RestartSec=5
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=read-only
+
+[Install]
+WantedBy=default.target

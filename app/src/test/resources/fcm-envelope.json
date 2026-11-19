@@ -1,0 +1,13 @@
+{
+  "key": "BwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwc=",
+  "alert": {
+    "kind": "test",
+    "title": "Forge",
+    "body": "Encrypted hello 🌏"
+  },
+  "envelope": {
+    "version": "1",
+    "iv": "6O5aACqRRM3wa2qR",
+    "ciphertext": "2SvkE3A8RxpyszwD8fNVT5MEQGFHXfU2sZHSpqqh2tx4/pzRqsSC5YPNtVuZF27JN5fSDrckthcUtEEC/IKSxBmT/UwfL3rzZDOEM3mgB6mfqWU="
+  }
+}

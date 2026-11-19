@@ -1,0 +1,9 @@
+<resources>
+    <!-- Dark launch window, so a dark phone doesn't flash the light background before Compose draws. -->
+    <style name="Theme.Forge" parent="android:style/Theme.Material.NoActionBar">
+        <item name="android:fontFamily">sans</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowActionModeOverlay">true</item>
+        <item name="android:windowBackground">#1b1917</item>
+    </style>
+</resources>

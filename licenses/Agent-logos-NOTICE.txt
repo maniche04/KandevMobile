@@ -1,0 +1,4 @@
+Provider marks used for agent identification, matching the artwork served by Kandev.
+Source: Kandev /api/v1/agents/{agent}/logo?variant=light (2026-10-31).
+OpenAI: codex-acp; Claude: claude-acp; Gemini: gemini; OpenCode: opencode-acp; Pi: pi-acp; Antigravity: antigravity-acp.
+Marks remain the property of their respective owners.

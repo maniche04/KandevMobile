@@ -1,0 +1,10 @@
+'use strict';
+const term = new Terminal({fontFamily:'JetBrains,monospace',fontSize:13,cursorBlink:true,scrollback:2000,disableStdin:true,theme:{background:'#1b1917',foreground:'#eee8de',cursor:'#e9a17e'}});
+const fit = new FitAddon.FitAddon();term.loadAddon(fit);term.open(document.getElementById('terminal'));
+term.onData(data=>ForgeTerminal.input(data));
+term.onResize(size=>ForgeTerminal.resize(size.cols,size.rows));
+window.forgeWrite=(sequence,data,reset)=>{if(reset)term.reset();const bytes=Uint8Array.from(atob(data),c=>c.charCodeAt(0));term.write(bytes,()=>ForgeTerminal.drained(sequence));};
+window.forgeEnabled=enabled=>{term.options.disableStdin=!enabled;};
+window.forgeFocus=()=>term.focus();
+new ResizeObserver(()=>{try{fit.fit();}catch(_){}}).observe(document.getElementById('terminal'));
+document.fonts.ready.then(()=>{fit.fit();ForgeTerminal.ready();});

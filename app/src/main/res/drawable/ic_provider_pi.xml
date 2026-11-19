@@ -1,0 +1,6 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android" android:width="48dp" android:height="48dp"
+    android:viewportWidth="800" android:viewportHeight="800">
+    <!-- Provider artwork from Kandev agent logos; see Agent-logos-NOTICE.txt. -->
+    <path android:fillColor="#000000" android:fillType="evenOdd" android:pathData="M165.29 165.29 H517.36 V400 H400 V517.36 H282.65 V634.72 H165.29 Z M282.65 282.65 V400 H400 V282.65 Z"/>
+    <path android:fillColor="#000000" android:pathData="M517.36 400 H634.72 V634.72 H517.36 Z"/>
+</vector>

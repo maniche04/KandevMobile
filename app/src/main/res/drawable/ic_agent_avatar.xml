@@ -1,0 +1,7 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android" android:width="48dp" android:height="48dp"
+    android:viewportWidth="108" android:viewportHeight="108">
+    <!-- Forge F with a terminal prompt notch; within the adaptive icon safe zone. -->
+    <group android:scaleX="0.08" android:scaleY="0.08" android:translateX="-0.48" android:translateY="2.96">
+        <path android:fillColor="#FFA64B32" android:pathData="M546,330 L925,330 Q953,330 941,355 L886,454 Q866,491 833,491 L568,491 L568,558 L799,558 Q833,558 817,588 L769,673 Q756,698 727,698 L568,698 L568,885 Q568,945 518,945 L438,945 Q418,945 418,925 L418,740 L588,643 Q604,631 588,619 L428,528 Q418,522 418,507 L418,447 Q418,419 440,401 L518,340 Q531,330 546,330 Z M418,561 L535,629 L418,698 Z"/>
+    </group>
+</vector>

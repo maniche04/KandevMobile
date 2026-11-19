@@ -1,0 +1,7 @@
+[
+  {"pending":"permission","message":{"type":"permission_request","metadata":{"action_details":{"command":"git diff --stat"}}},"expected":"Approve running:\ngit diff --stat"},
+  {"pending":"permission","message":{"type":"permission_request","metadata":{"action_details":{"path":"/workspace/app"}}},"expected":"Approve access to:\n/workspace/app"},
+  {"pending":"question","message":{"type":"clarification_request","metadata":{"question":{"id":"q1","prompt":"Which environment should I deploy to?"}}},"expected":"Question: Which environment should I deploy to?"},
+  {"pending":"permission","message":null,"expected":"An action needs your approval"},
+  {"pending":"question","message":null,"expected":"A question is waiting for you"}
+]

@@ -1,0 +1,36 @@
+{
+  "messages": [
+    {
+      "id": "demo-user",
+      "session_id": "demo-session",
+      "author_type": "user",
+      "type": "message",
+      "content": "Add a search field to the example app.",
+      "created_at": "2026-01-01T10:00:00Z"
+    },
+    {
+      "id": "demo-tool",
+      "session_id": "demo-session",
+      "author_type": "agent",
+      "type": "tool_execute",
+      "content": "git status --short",
+      "created_at": "2026-01-01T10:00:01Z",
+      "metadata": {
+        "title": "git status --short",
+        "tool_call_id": "demo-call",
+        "status": "complete"
+      }
+    },
+    {
+      "id": "demo-agent",
+      "session_id": "demo-session",
+      "author_type": "agent",
+      "type": "message",
+      "content": "Search is implemented and the checks pass.",
+      "created_at": "2026-01-01T10:00:02Z"
+    }
+  ],
+  "total": 3,
+  "has_more": false,
+  "cursor": "demo-agent"
+}

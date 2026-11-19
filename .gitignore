@@ -1,0 +1,27 @@
+.gradle/
+.kotlin/
+.idea/
+**/build/
+local.properties
+*.iml
+*.jks
+*.keystore
+.DS_Store
+
+.kandev/
+**/google-services.json
+*firebase-adminsdk*.json
+*service-account*.json
+
+# Design concepts and validation screenshots (local scratch)
+output/
+
+# Operator secrets and local deployment state
+.forge/
+.forge-relay/
+*.env
+*.pem
+signing.properties
+cloudflare-context.json
+cloudflare-api-token
+__pycache__/

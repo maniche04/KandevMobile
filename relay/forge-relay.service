@@ -1,0 +1,16 @@
+[Unit]
+Description=forge-relay: offline agent alerts for Forge (Kandev Android)
+After=network-online.target kandev.service
+Wants=network-online.target
+
+[Service]
+ExecStart=/usr/bin/node %h/projects/KandevMobile/relay/forge-relay.mjs
+Environment=KANDEV_URL=http://127.0.0.1:38429
+# Set the checkout path above. Private configuration belongs in ~/.forge/relay.env.
+EnvironmentFile=-%h/.forge/relay.env
+Restart=always
+RestartSec=5
+NoNewPrivileges=true
+
+[Install]
+WantedBy=default.target
