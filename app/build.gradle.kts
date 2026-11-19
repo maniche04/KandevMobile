@@ -79,7 +79,7 @@ dependencies {
     implementation("io.noties.markwon:linkify:4.6.2")
     implementation("androidx.webkit:webkit:1.12.1")
     implementation("androidx.room:room-runtime:2.7.2")
-    implementation("androidx.room:room-ktx:2.7.2")
+    implementation("androidx.room:room-ktx:2.8.5")
     ksp("androidx.room:room-compiler:2.7.2")
     implementation("androidx.core:core-ktx:1.16.0")
     implementation("androidx.lifecycle:lifecycle-process:2.9.0")
