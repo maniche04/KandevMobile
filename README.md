@@ -12,33 +12,93 @@ These captures use synthetic example tasks, with no private server or conversati
 | --- | --- |
 | ![Light task list with example coding tasks](docs/screenshots/tasks-light.png) | ![Dark conversation with an example coding agent](docs/screenshots/chat-dark.png) |
 
-## What you need
+## At a glance
 
-- A running Kandev v0.98.0 instance with a workspace. Forge does not install or host Kandev.
-- A server address your phone can reach, and a Kandev API token if authentication is enabled.
-- Either the signed APK from this repository's [latest release](../../releases/latest), or a source build (JDK 17,
-  Android SDK Platform 36 and Build Tools 36.0.0; the Gradle wrapper is included).
+Forge has three tiers. **Only the core is required.** Each extra is independent, runs on infrastructure you own,
+and can be added or removed later without reinstalling. Nothing connects to the author's servers or accounts.
 
-**Install a release:** download `forge-<version>.apk` from [Releases](../../releases/latest), allow your browser or
-file manager to install apps, and open it. Each release lists the APK's SHA-256 and signing-certificate fingerprint and
-carries a GitHub build attestation (`gh attestation verify forge-<version>.apk --repo OWNER/REPOSITORY`). Release APKs
-check this repository's releases for updates; they do not include Firebase, so away alerts need a source build with your
-own Firebase project (see [relay/README.md](relay/README.md)). Everything else, including live notifications while the
-app can reach your server, works without it.
+| Tier | What you get | What it needs | If you skip it |
+| --- | --- | --- | --- |
+| **Core** (release APK) | Tasks, chat, approvals, questions, plans, diffs, files, terminal, offline cache, notifications while Forge can reach Kandev, in-app updates | Kandev v0.98.0 and a network route from the phone (LAN, Tailscale or your own HTTPS) | — |
+| **Recommended** · [usage strip](#recommended-provider-usage-plugin) | Codex/Claude/… quota chips on the home screen | Provider Usage **v0.12.0** plugin on the Kandev server | The strip is hidden; everything else works |
+| **Optional** · [Cloudflare access](#optional-cloudflare-tunnel) | Reach Kandev from anywhere without a VPN app | Your Cloudflare account and domain, a Linux host, the included gateway | Use LAN, Tailscale or your own HTTPS |
+| **Optional** · [away alerts (FCM)](#optional-away-alerts-fcm) | Alerts while the phone sleeps or can't reach Kandev | Your Firebase project, the included relay (Node.js 22+), and **your own APK build** | Alerts arrive only while Forge can reach Kandev |
 
-**Start with direct LAN or Tailscale access.** Cloudflare, Firebase, a domain, and the relay are optional. Each deployment owns its server, credentials, and optional cloud accounts; no connection to the author's infrastructure is needed.
+## Quick start
 
-## Optional integrations and dependencies
+1. **Check the server.** From a machine on the same network (add `-H "Authorization: Bearer …"` if Kandev requires auth):
 
-Provider usage, push delivery and remote routing are independent additions. The [dependency and
-integration guide](docs/OPTIONAL_INTEGRATIONS.md) lists where each component runs, how to set it
-up, and what happens when it is absent. In particular, the usage strip needs the server-side
-Provider Usage plugin and CodexBar; neither is required to connect or chat. Use the documented
-plugin version compatible with Kandev v0.98.0 rather than installing its development branch.
+   ```sh
+   curl --fail http://192.168.1.10:38429/api/v1/system/info   # expect "version": "0.98.0"
+   ```
 
-## Build and connect
+2. **Install Forge.** Download `forge-<version>.apk` from [Releases](../../releases/latest), allow your browser or file
+   manager to install apps, and open it. Release APKs offer updates from this repository's releases (Settings → About).
+3. **Connect.** Enter the server's **base address** (e.g. `http://192.168.1.10:38429`, `http://devbox.tail1234.ts.net:38429`
+   or `https://kandev.example.com`) — not `localhost`, and without `/api/v1` or `/ws`. Add the API token if required,
+   tap **Connect** and choose a workspace.
+4. **Optional:** install the [usage plugin](#recommended-provider-usage-plugin) on the server.
 
-From your clone of this repository:
+That's the whole core setup. No Firebase, Cloudflare, domain, relay, signing key or build tools are needed for it.
+
+Plain HTTP is accepted only for private hosts (RFC 1918, Tailscale `100.64.0.0/10` and `*.ts.net`, `*.local`,
+single-label names); public hosts need HTTPS. Each release lists the APK's SHA-256 and signing-certificate fingerprint
+and carries a build attestation: `gh attestation verify forge-<version>.apk --repo maniche04/KandevMobile`.
+
+## Reaching Kandev from outside your network
+
+The phone needs a route to Kandev wherever you are. Pick one; you can save several in Settings → **Connection routes**
+and Forge switches between them automatically.
+
+| Route | Best for | Setup |
+| --- | --- | --- |
+| LAN | Home/office only | Enter the private address |
+| **Tailscale** (simplest remote option) | Personal use from anywhere | Install Tailscale on the phone and the server, enter the server's tailnet address |
+| Your own HTTPS | You already run a reverse proxy | Authenticated HTTPS endpoint that forwards WebSockets; enter it with the Kandev token |
+| Cloudflare Tunnel + Access | No VPN app on the phone, your own domain | [Included gateway](#optional-cloudflare-tunnel) |
+
+Alternate routes must reach the same server (same version and workspace UUID). Switching routes never replays writes.
+See [route details](remote/README.md#automatic-routes).
+
+## Recommended: Provider Usage plugin
+
+The home screen's quota strip reads the server-side
+[Provider Usage plugin](https://github.com/kdlbs/kandev-plugin-provider-usage), which uses CodexBar on the Kandev host.
+Install **v0.12.0** (Kandev → Settings → Plugins → Install plugin → Upload the
+[v0.12.0 release](https://github.com/kdlbs/kandev-plugin-provider-usage/releases/tag/v0.12.0)). Do not install the
+plugin's `main` branch: it requires Kandev 0.99.0+. Sign providers in on the server, never on the phone. Full steps,
+verification and troubleshooting: [usage setup guide](docs/OPTIONAL_INTEGRATIONS.md#optional-provider-usage-setup).
+
+## Optional: Cloudflare Tunnel
+
+Use this if you want access from anywhere without Tailscale. The included gateway puts Kandev behind your own Cloudflare
+Tunnel and Access application, with one service token per phone and a separate gateway token. Phones are enrolled by
+importing a connection file (browser login challenges are not supported). No Cloudflare credentials are embedded in the
+APK. Cloudflare terminates TLS and can see app traffic. Setup, enrollment and revocation: [remote/README.md](remote/README.md).
+
+## Optional: away alerts (FCM)
+
+Without this, Forge notifies you whenever it can reach Kandev (it runs a foreground monitor while agents work). For
+alerts while the phone sleeps or is off your network, you need push through Firebase Cloud Messaging:
+
+```
+Kandev → forge-relay (your host) → your Firebase project → Forge (your build)
+```
+
+1. Create a Firebase project and register package `ca.mslab.forge` (and/or `ca.mslab.forge.debug`).
+2. Put its `google-services.json` in `app/` and [build and sign your own APK](#build-from-source). The release APK
+   can't do this: Firebase configuration is compiled in, and published releases deliberately have none.
+3. Run the included [forge-relay](relay/README.md) with that project's service account on a host that can reach Kandev.
+4. Pair the phone in Settings → **Alerts when away** over LAN or Tailscale.
+
+The phone needs Google Play services. Alert contents are encrypted per phone before they reach Firebase. Your build is
+signed with your key, so it can't update over a release install: uninstall the release first (saved profiles and cache
+are cleared), and publish your own updates (see [In-app updates](#in-app-updates)).
+
+## Build from source
+
+Needed only for FCM, your own signing key, or development: JDK 17, Android SDK Platform 36 and Build Tools 36.0.0
+(the Gradle wrapper is included).
 
 ```sh
 # Point this at your installed Android SDK, or set sdk.dir in local.properties.
@@ -47,43 +107,14 @@ export ANDROID_HOME="$HOME/Android/Sdk"
 adb install -r app/build/outputs/apk/debug/app-debug.apk
 ```
 
-No Firebase file or release signing key is required for this build. Open Forge, enter your server's **base address**, for example `http://192.168.1.10:38429` or `https://kandev.example.com`, enter the API token if required, and tap **Connect**. Do not append `/api/v1` or `/ws`. Choose a workspace if prompted.
-
-Verify the version from a machine on the same network:
-
-```sh
-curl --fail http://192.168.1.10:38429/api/v1/system/info
-# Expected: JSON with version "0.98.0" (add Authorization: Bearer … if required).
-```
-
-Use your server's address, not `localhost` on the phone. Plain HTTP is allowed for private LAN/Tailscale hosts, `*.ts.net`, `*.local` and single-label names; public hosts require HTTPS. Use HTTP only over a trusted private network. Server certificates use Android's normal trust store.
-
-Debug installs use package `ca.mslab.forge.debug`; release installs use `ca.mslab.forge`. They have separate app data and may coexist. Debug builds are slower; assess performance on a release build.
-
-## Optional remote access
-
-Choose the route that fits your deployment:
-
-| Access | Needed | Setup |
-| --- | --- | --- |
-| LAN | Reachable private Kandev address | Enter address in Forge |
-| Tailscale | Phone and server connected to your tailnet | Enter server's tailnet address |
-| Public HTTPS | Authenticated HTTPS endpoint supporting WebSockets | Enter address and Kandev token |
-| Cloudflare Tunnel + Access | Your domain, Cloudflare account and a Linux host | [Remote operator guide](remote/README.md) |
-
-The included Cloudflare path uses a dedicated Access application, one service token per phone and a separate gateway token. Browser login challenges are not supported by the native app; use the provided connection-file import. No Cloudflare credentials are embedded in the APK.
-
-Settings → **Connection routes** can save LAN, Tailscale and Cloudflare routes for the same server. Alternates must match the supported version and paired workspace UUID. Routes share one cache and drafts; switching routes does not replay writes. See the [route details](remote/README.md#automatic-routes).
-
-## Optional alerts while away
-
-Live notifications work while Forge can reach Kandev. For alerts while the phone sleeps or cannot reach your server, deploy [forge-relay](relay/README.md) with **your own Firebase project** and build an APK with that project's Android configuration. FCM requires Google Play services. A tunnel alone does not bypass Android background limits.
-
-Alert contents are encrypted by the relay with a per-phone AES-GCM key before submission to FCM. Firebase still handles device delivery metadata; your Kandev host and relay handle plaintext. Cloudflare terminates TLS when used and is a trusted intermediary for app traffic.
+No Firebase file or signing key is required to build. Debug installs use package `ca.mslab.forge.debug`; release
+installs use `ca.mslab.forge`. They have separate app data and may coexist. Debug builds are slower; assess performance
+on a release build. Signed release builds: [Release builds and signing](#release-builds-and-signing). The full
+dependency map is in [docs/OPTIONAL_INTEGRATIONS.md](docs/OPTIONAL_INTEGRATIONS.md).
 
 ## Using Forge
 
-- **Home:** workspace picker, search, workflow/repository lists or Kanban board, and a **Needs you** group for open requests. Provider usage is optional; see the [usage setup guide](docs/OPTIONAL_INTEGRATIONS.md#optional-provider-usage-setup).
+- **Home:** workspace picker, search, workflow/repository lists or Kanban board, and a **Needs you** group for open requests. Provider usage chips appear when the [usage plugin](#recommended-provider-usage-plugin) is installed.
 - **Task:** agent/session picker, live chat, tool output, attachments, approvals and complete question bundles. Start, stop, resume and queue messages explicitly.
 - **Workspace tabs:** editable Markdown plans, changes with commit/push/PR actions, files with conflict-aware saves, and a terminal. Terminal input and uncertain submissions are never automatically replayed.
 - **Offline:** cached tasks, history and drafts remain available. Reconnecting revalidates state. Approval submission checks the current request to avoid answering expired requests.
@@ -117,7 +148,7 @@ chmod 600 "$HOME/.forge/signing.properties" "$HOME/.forge/release.jks"
 adb install -r app/build/outputs/apk/release/app-release.apk
 ```
 
-Keep the key backed up privately. App updates require the same package and signing key; an APK signed by another operator cannot update your existing install, so switching between a published release and your own build means uninstalling first (which clears saved profiles and cache). Firebase configuration is optional for both variants; follow the relay guide to enable it.
+Keep the key backed up privately. App updates require the same package and signing key; an APK signed by another operator cannot update your existing install, so switching between a published release and your own build means uninstalling first (which clears saved profiles and cache). Firebase configuration is optional for both variants; see [away alerts](#optional-away-alerts-fcm).
 
 ### In-app updates
 
@@ -160,11 +191,35 @@ Avoid `\` in key passwords used by the workflow; the generated properties file d
 
 ## Development and AI-assisted setup
 
-Read [AGENTS.md](AGENTS.md) before running commands. It includes this maintainer workspace's resource and emulator constraints; other operators should document their own test device. Never infer credentials or a production hostname from examples.
+### For AI agents setting up Forge
 
-A useful setup request for an AI assistant:
+Facts to rely on:
 
-> Read README.md, AGENTS.md and the guide for my chosen access mode. Help me build Forge for my existing Kandev v0.98.0 server. Ask me for my server base URL, authentication requirements and network route. Start with direct access; configure Cloudflare or FCM only if I request it. Keep keys and phone enrollment files outside the repository, verify read-only connectivity, and do not submit prompts or approve agent actions as a setup test.
+- **Required:** a Kandev **v0.98.0** server and a network route from the phone. Installing the release APK and entering
+  the base address is the complete core setup; no build, Firebase, Cloudflare, relay or plugin is needed.
+- **Recommended, server-side only:** Provider Usage plugin **v0.12.0** (not `main`). Without it the usage strip is hidden.
+- **Optional, independent, operator-owned:** Cloudflare Tunnel ([remote/README.md](remote/README.md)) and FCM away
+  alerts ([relay/README.md](relay/README.md)). FCM always means building and signing the operator's own APK with their
+  own `google-services.json`; a release APK can never receive FCM alerts.
+- The full dependency map, with what happens when each piece is absent, is in
+  [docs/OPTIONAL_INTEGRATIONS.md](docs/OPTIONAL_INTEGRATIONS.md). The pinned protocol is in
+  [docs/API_CONTRACT.md](docs/API_CONTRACT.md).
+
+Rules:
+
+- Ask the user for their server base URL, whether auth is enabled, and how the phone reaches the server. Every address,
+  hostname and account in this repository is a placeholder; never reuse one.
+- Start with the core setup. Add Cloudflare or FCM only when the user asks for it.
+- Keep tokens, keystores, service accounts and enrollment files outside the repository.
+- Verify with read-only requests (`/api/v1/system/info`). Never submit prompts, answer approvals or start/stop agent
+  sessions as a setup test.
+- [AGENTS.md](AGENTS.md) covers build commands and this maintainer's host limits (heap caps, no local emulator);
+  substitute your own test device.
+
+A setup request you can give an assistant:
+
+> Read README.md and follow its "For AI agents" section. Help me get Forge running against my Kandev v0.98.0 server.
+> Ask me for my server address, auth and network route; set up only the core unless I ask for extras.
 
 Verification without an emulator:
 

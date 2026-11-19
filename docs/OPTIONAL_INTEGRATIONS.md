@@ -36,8 +36,8 @@ provider credentials on the phone.
 
 ### Server prerequisites
 
-For this app's pinned Kandev v0.98.0, use the **Provider Usage v0.12.0** baseline already deployed
-with this project. Do not blindly install plugin `main`: its newer SDK declares Kandev 0.99.0+,
+For this app's pinned Kandev v0.98.0, use **Provider Usage v0.12.0**, the version Forge is tested
+with. Do not blindly install plugin `main`: its newer SDK declares Kandev 0.99.0+,
 which Forge currently rejects. Compare compatibility before upgrading either component.
 See the [v0.12.0 manifest](https://github.com/kdlbs/kandev-plugin-provider-usage/blob/v0.12.0/manifest.yaml)
 and [current SDK compatibility notes](https://github.com/kdlbs/kandev-plugin-provider-usage#develop).
@@ -96,4 +96,4 @@ covered by `UsageStripTest`. Installing a plugin is an operator choice, not a co
 
 - [Cloudflare gateway, enrollment and revocation](../remote/README.md)
 - [FCM relay and Firebase configuration](../relay/README.md)
-- [Direct connection and source builds](../README.md#build-and-connect)
+- [Quick start (direct connection)](../README.md#quick-start) and [source builds](../README.md#build-from-source)

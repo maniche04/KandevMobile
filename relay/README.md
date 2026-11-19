@@ -30,7 +30,7 @@ without an inbound connection to the relay. Do not expose the relay to the publi
    `ca.mslab.forge.debug` for debug. Download the matching `google-services.json` to `app/`.
    Both packages may be configured in one project file. Package names must match exactly;
    see [Firebase Android setup](https://firebase.google.com/docs/android/setup).
-2. Build and install that variant using the [main build instructions](../README.md#build-and-connect).
+2. Build and install that variant using the [source build instructions](../README.md#build-from-source).
    Without a matching Firebase configuration, the app still builds and works, but FCM is unavailable.
 3. Enable the Firebase Cloud Messaging HTTP v1 API. Create a service account with FCM send
    permission (for example Firebase Cloud Messaging API Admin), following the official
