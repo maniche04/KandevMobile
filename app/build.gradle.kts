@@ -85,7 +85,7 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-process:2.9.0")
     implementation("androidx.profileinstaller:profileinstaller:1.4.1")
     implementation("org.unifiedpush.android:connector:3.3.5")
-    implementation("com.google.firebase:firebase-messaging:26.0.1")
+    implementation("com.google.firebase:firebase-messaging:26.0.2")
     debugImplementation("androidx.compose.ui:ui-tooling")
     androidTestImplementation("androidx.test:runner:1.6.2")
     androidTestImplementation("androidx.test.ext:junit:1.2.1")
