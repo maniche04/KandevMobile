@@ -2,6 +2,12 @@
 
 Target: [Kandev v0.98.0](https://github.com/kdlbs/kandev/releases/tag/v0.98.0), commit `2d93502c256780e1f3d9df4348dafbd97b584188`. The newer main snapshot inspected during discovery is not the implementation authority. No older-server adapter or protocol negotiation is planned.
 
+Forge accepts any release `>= v0.98.0` (`isSupportedKandev`). A source comparison of v0.98.0 and v0.101.0 (`3c2f7e98`)
+found only additions: the conversation delivery files are byte-identical (`protocol_version` 2), every WS action
+and HTTP route Forge uses still exists, no consumed JSON field or state enum changed, and the release notes list no
+breaking changes. One difference: v0.101.0 answers HTTP 503 (`authentication unavailable`) where v0.98.0 answered
+401 when the server can't check credentials. Re-check this contract before relying on a field added after v0.98.0.
+
 | Operation | Request | Consumed response fields |
 | --- | --- | --- |
 | Server info | `GET /api/v1/system/info` | `version`, `commit` |

@@ -191,7 +191,7 @@ private fun ConnectionForm(
                         IconBadge(Icons.Rounded.Dns)
                         Column {
                             Text("Connect your server", style = MaterialTheme.typography.titleMedium)
-                            Text("Kandev v$TARGET_KANDEV_VERSION", style = MaterialTheme.typography.bodySmall,
+                            Text("Kandev v$TARGET_KANDEV_VERSION or newer", style = MaterialTheme.typography.bodySmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant)
                         }
                     }

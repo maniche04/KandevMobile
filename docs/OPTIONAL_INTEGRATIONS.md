@@ -1,6 +1,6 @@
 # Dependencies and optional integrations
 
-An installed Forge APK needs Android 8.0+ and a reachable Kandev v0.98.0 instance.
+An installed Forge APK needs Android 8.0+ and a reachable Kandev v0.98.0 or newer instance.
 Use the server's existing workspace, agents and execution environment. None of the integrations
 below is required for task navigation, chat, plans or cached history.
 
@@ -36,9 +36,9 @@ provider credentials on the phone.
 
 ### Server prerequisites
 
-For this app's pinned Kandev v0.98.0, use **Provider Usage v0.12.0**, the version Forge is tested
-with. Do not blindly install plugin `main`: its newer SDK declares Kandev 0.99.0+,
-which Forge currently rejects. Compare compatibility before upgrading either component.
+Use **Provider Usage v0.12.0**, the latest release and the version Forge is tested with. It
+installs on Kandev v0.98.0 and newer. The plugin's unreleased `main` moves to a new SDK (Kandev
+0.99.0+) and hasn't been checked against Forge; compare its response schema before upgrading.
 See the [v0.12.0 manifest](https://github.com/kdlbs/kandev-plugin-provider-usage/blob/v0.12.0/manifest.yaml)
 and [current SDK compatibility notes](https://github.com/kdlbs/kandev-plugin-provider-usage#develop).
 

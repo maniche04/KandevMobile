@@ -1,6 +1,6 @@
 # Forge / KandevMobile — agent notes
 
-Read README.md first. Kandev v0.98.0 is the only supported protocol; see docs/API_CONTRACT.md.
+Read README.md first. Forge targets the Kandev v0.98.0 protocol and accepts newer releases; see docs/API_CONTRACT.md.
 Never assume the maintainer's server, hostname, tokens, Firebase project or Cloudflare account
 are available to another operator. Example addresses are placeholders.
 

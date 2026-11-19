@@ -2,7 +2,7 @@
 
 Forge is a native Android client for your own [Kandev](https://github.com/kdlbs/kandev) instance. Follow coding agents, review approvals, answer questions, edit plans and files, inspect diffs, and use a terminal from your phone.
 
-**Compatibility:** Kandev **v0.98.0** only; Android **8.0+** (API 26). Other Kandev versions are rejected. This is a community client, not an official Kandev or agent-provider app.
+**Compatibility:** Kandev **v0.98.0 or newer** (checked through v0.101.0); Android **8.0+** (API 26). Older Kandev versions are rejected. This is a community client, not an official Kandev or agent-provider app.
 
 ## Screenshots
 
@@ -19,7 +19,7 @@ and can be added or removed later without reinstalling. Nothing connects to the 
 
 | Tier | What you get | What it needs | If you skip it |
 | --- | --- | --- | --- |
-| **Core** (release APK) | Tasks, chat, approvals, questions, plans, diffs, files, terminal, offline cache, notifications while Forge can reach Kandev, in-app updates | Kandev v0.98.0 and a network route from the phone (LAN, Tailscale or your own HTTPS) | — |
+| **Core** (release APK) | Tasks, chat, approvals, questions, plans, diffs, files, terminal, offline cache, notifications while Forge can reach Kandev, in-app updates | Kandev v0.98.0+ and a network route from the phone (LAN, Tailscale or your own HTTPS) | — |
 | **Recommended** · [usage strip](#recommended-provider-usage-plugin) | Codex/Claude/… quota chips on the home screen | Provider Usage **v0.12.0** plugin on the Kandev server | The strip is hidden; everything else works |
 | **Optional** · [Cloudflare access](#optional-cloudflare-tunnel) | Reach Kandev from anywhere without a VPN app | Your Cloudflare account and domain, a Linux host, the included gateway | Use LAN, Tailscale or your own HTTPS |
 | **Optional** · [away alerts (FCM)](#optional-away-alerts-fcm) | Alerts while the phone sleeps or can't reach Kandev | Your Firebase project, the included relay (Node.js 22+), and **your own APK build** | Alerts arrive only while Forge can reach Kandev |
@@ -29,7 +29,7 @@ and can be added or removed later without reinstalling. Nothing connects to the 
 1. **Check the server.** From a machine on the same network (add `-H "Authorization: Bearer …"` if Kandev requires auth):
 
    ```sh
-   curl --fail http://192.168.1.10:38429/api/v1/system/info   # expect "version": "0.98.0"
+   curl --fail http://192.168.1.10:38429/api/v1/system/info   # expect "version": "v0.98.0" or newer
    ```
 
 2. **Install Forge.** Download `forge-<version>.apk` from [Releases](../../releases/latest), allow your browser or file
@@ -64,9 +64,9 @@ See [route details](remote/README.md#automatic-routes).
 
 The home screen's quota strip reads the server-side
 [Provider Usage plugin](https://github.com/kdlbs/kandev-plugin-provider-usage), which uses CodexBar on the Kandev host.
-Install **v0.12.0** (Kandev → Settings → Plugins → Install plugin → Upload the
-[v0.12.0 release](https://github.com/kdlbs/kandev-plugin-provider-usage/releases/tag/v0.12.0)). Do not install the
-plugin's `main` branch: it requires Kandev 0.99.0+. Sign providers in on the server, never on the phone. Full steps,
+Install the **v0.12.0** release (Kandev → Settings → Plugins → Install plugin → Upload the
+[v0.12.0 release](https://github.com/kdlbs/kandev-plugin-provider-usage/releases/tag/v0.12.0)). Don't install the
+plugin's unreleased `main` branch; Forge hasn't been tested with it. Sign providers in on the server, never on the phone. Full steps,
 verification and troubleshooting: [usage setup guide](docs/OPTIONAL_INTEGRATIONS.md#optional-provider-usage-setup).
 
 ## Optional: Cloudflare Tunnel
@@ -195,9 +195,9 @@ Avoid `\` in key passwords used by the workflow; the generated properties file d
 
 Facts to rely on:
 
-- **Required:** a Kandev **v0.98.0** server and a network route from the phone. Installing the release APK and entering
+- **Required:** a Kandev **v0.98.0 or newer** server and a network route from the phone. Installing the release APK and entering
   the base address is the complete core setup; no build, Firebase, Cloudflare, relay or plugin is needed.
-- **Recommended, server-side only:** Provider Usage plugin **v0.12.0** (not `main`). Without it the usage strip is hidden.
+- **Recommended, server-side only:** Provider Usage plugin **v0.12.0** release (not unreleased `main`). Without it the usage strip is hidden.
 - **Optional, independent, operator-owned:** Cloudflare Tunnel ([remote/README.md](remote/README.md)) and FCM away
   alerts ([relay/README.md](relay/README.md)). FCM always means building and signing the operator's own APK with their
   own `google-services.json`; a release APK can never receive FCM alerts.
@@ -218,7 +218,7 @@ Rules:
 
 A setup request you can give an assistant:
 
-> Read README.md and follow its "For AI agents" section. Help me get Forge running against my Kandev v0.98.0 server.
+> Read README.md and follow its "For AI agents" section. Help me get Forge running against my Kandev server (v0.98.0 or newer).
 > Ask me for my server address, auth and network route; set up only the core unless I ask for extras.
 
 Verification without an emulator:

@@ -27,7 +27,19 @@ import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.RequestBody.Companion.toRequestBody
 import kotlinx.serialization.json.*
 
+/** Oldest Kandev this build speaks to; newer releases are accepted (0.99–0.101 only added to the protocol). */
 const val TARGET_KANDEV_VERSION = "0.98.0"
+
+/** `v0.101.0`, `0.98.0-rc.1+abc` → (0, 101, 0); null for anything that isn't a release number. */
+internal fun kandevRelease(version: String): List<Int>? =
+    Regex("""^v?(\d+)\.(\d+)\.(\d+)(?:[-+].*)?$""").matchEntire(version.trim())?.groupValues?.drop(1)
+        ?.map { it.toIntOrNull() ?: return null }
+
+internal fun isSupportedKandev(version: String): Boolean {
+    val release = kandevRelease(version) ?: return false
+    val minimum = kandevRelease(TARGET_KANDEV_VERSION)!!
+    return release.zip(minimum).firstOrNull { (a, b) -> a != b }?.let { (a, b) -> a > b } ?: true
+}
 
 @Serializable
 data class SystemInfo(val version: String, val commit: String)
@@ -52,7 +64,7 @@ internal object Advisory
 
 internal class UsageUnavailable(val status: Int) : KandevApiException("Provider usage returned HTTP $status")
 
-/** Only the v0.98.0 HTTP contract. Credentials never enter URLs. */
+/** The v0.98.0 HTTP contract, which later releases keep. Credentials never enter URLs. */
 class KandevApi(
     serverUrl: String,
     private val token: String = "",
@@ -70,9 +82,10 @@ class KandevApi(
 
     suspend fun checkVersion(): SystemInfo {
         val info = decode<SystemInfo>("/api/v1/system/info")
-        if (info.version.removePrefix("v") != TARGET_KANDEV_VERSION) {
+        if (!isSupportedKandev(info.version)) {
             throw KandevApiException(
-                "This build needs Kandev v$TARGET_KANDEV_VERSION. Update the server before connecting.",
+                if (kandevRelease(info.version) == null) "Kandev reported version \"${info.version.take(40)}\". This build needs a release, v$TARGET_KANDEV_VERSION or newer."
+                else "This build needs Kandev v$TARGET_KANDEV_VERSION or newer. Update the server before connecting.",
             )
         }
         return info

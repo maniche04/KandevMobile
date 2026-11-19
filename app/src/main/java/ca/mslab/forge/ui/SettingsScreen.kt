@@ -67,7 +67,7 @@ internal fun SettingsScreen(model: ConnectionViewModel, onClose: () -> Unit) {
             item {
                 SettingsCard {
                     KeyValue(Icons.Rounded.PhoneAndroid, "Forge", BuildConfig.VERSION_NAME)
-                    KeyValue(Icons.Rounded.Verified, "Built for", "Kandev v$TARGET_KANDEV_VERSION")
+                    KeyValue(Icons.Rounded.Verified, "Works with", "Kandev v$TARGET_KANDEV_VERSION+")
                     KeyValue(Icons.Rounded.Lock, "Profile storage", "Android Keystore")
                     HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
                     AppUpdateRow()

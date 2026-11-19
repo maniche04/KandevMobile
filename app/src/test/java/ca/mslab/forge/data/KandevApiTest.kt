@@ -35,6 +35,26 @@ class KandevApiTest {
         assertEquals(1, server.requestCount)
     }
 
+    @Test fun `newer kandev releases are accepted`() = runBlocking {
+        server.enqueue(MockResponse().setBody("""{"version":"v0.101.0","commit":"3c2f7e98"}"""))
+        server.enqueue(MockResponse().setBody("""{"workspaces":[],"total":0}"""))
+        assertEquals("v0.101.0", KandevApi(server.url("/").toString()).connect().server.version)
+    }
+
+    @Test fun `kandev version gate compares release numbers`() {
+        listOf("v0.98.0", "0.98.0", "v0.98.1", "v0.99.0", "v0.100.0", "v0.101.0", "v1.0.0", "v0.101.0-rc.1", " v0.98.0 ")
+            .forEach { assertTrue(it, isSupportedKandev(it)) }
+        listOf("v0.97.9", "v0.9.100", "v0.96.0", "dev", "", "v0.98", "v99999999999.0.0", "0.98.0.1")
+            .forEach { assertFalse(it, isSupportedKandev(it)) }
+    }
+
+    @Test fun `unreleased build names the reported version`() = runBlocking {
+        server.enqueue(MockResponse().setBody("""{"version":"dev","commit":"local"}"""))
+        val error = runCatching { KandevApi(server.url("/").toString()).connect() }.exceptionOrNull()
+        assertTrue(error!!.message!!.contains("\"dev\""))
+        assertEquals(1, server.requestCount)
+    }
+
     @Test fun `unauthorized response does not expose raw server body`() = runBlocking {
         server.enqueue(MockResponse().setResponseCode(401).setBody("secret server diagnostic"))
         val error = runCatching { KandevApi(server.url("/").toString()).connect() }.exceptionOrNull()

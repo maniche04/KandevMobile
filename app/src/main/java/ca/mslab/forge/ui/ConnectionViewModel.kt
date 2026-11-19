@@ -1151,7 +1151,7 @@ class ConnectionViewModel(application: Application) : AndroidViewModel(applicati
 
 private fun connectionError(error: Exception): String = when (error) {
     is KandevApiException -> error.message ?: "Could not connect. Try again."
-    is SerializationException -> "Unexpected server response. Check that this is a Kandev v0.98.0 server."
+    is SerializationException -> "Unexpected server response. Check that this is a Kandev v0.98.0 or newer server."
     is IllegalArgumentException -> "Check the server address, route settings, and session details."
     is IOException -> "Could not reach Kandev. Check the address, network, and HTTPS certificate."
     else -> "Could not load this view. Try again."

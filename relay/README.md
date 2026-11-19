@@ -19,7 +19,7 @@ Kandev → forge-relay → Firebase Cloud Messaging → Forge
 
 ## Prerequisites
 
-This is optional. Use your own Node.js 22+ host, Kandev v0.98.0 address, Firebase project
+This is optional. Use your own Node.js 22+ host, Kandev v0.98.0+ address, Firebase project
 and Firebase service account. Phones need Google Play services for direct FCM. LAN/Tailscale
 access to the relay is needed for pairing, token refresh and unpairing; FCM delivery then works
 without an inbound connection to the relay. Do not expose the relay to the public internet.

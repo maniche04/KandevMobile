@@ -11,7 +11,7 @@ transfer them privately and delete transfer copies after import.
 
 ## Prerequisites and inputs
 
-- Kandev v0.98.0 reachable from the gateway over trusted HTTP (default `http://127.0.0.1:38429`).
+- Kandev v0.98.0 or newer reachable from the gateway over trusted HTTP (default `http://127.0.0.1:38429`).
 - Linux with a systemd user manager, Python 3.9+, Node.js 22+, and `cloudflared` installed.
 - A domain in your Cloudflare account, an unused hostname such as `forge.example.com`, and
   a configured Zero Trust organization / team domain.

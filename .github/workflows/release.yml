@@ -71,6 +71,8 @@ jobs:
           echo "CERT=$CERT" >> "$GITHUB_ENV"
       - name: Package
         run: |
+          # checkout leaves the tag lightweight; fetch the annotated one so its message becomes the notes
+          git fetch --force origin "refs/tags/$GITHUB_REF_NAME:refs/tags/$GITHUB_REF_NAME"
           NOTES="$(git tag -l --format='%(contents:subject)' "$GITHUB_REF_NAME")" scripts/publish-apk.sh dist
           rm dist/forge-latest.apk
       - uses: actions/attest-build-provenance@v2
@@ -83,7 +85,7 @@ jobs:
           APK=$(ls dist/forge-*.apk)
           SHA=$(sha256sum "$APK" | cut -d' ' -f1)
           {
-            echo "Forge $VERSION for Kandev v0.98.0. Install \`$(basename "$APK")\` on Android 8.0+."
+            echo "Forge $VERSION for Kandev v0.98.0 or newer. Install \`$(basename "$APK")\` on Android 8.0+."
             echo
             echo "- APK SHA-256: \`$SHA\`"
             echo "- Signing certificate SHA-256: \`$CERT\`"
